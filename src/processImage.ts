@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import isAnimated from 'is-animated';
 import { ImageOptions } from './parseQuery';
 import { LoaderOptions } from './options';
 import optimizeImage from './optimize';
@@ -22,8 +23,22 @@ const processImage = async (
   loaderOptions: LoaderOptions,
 ): Promise<{ data: Buffer | string | string[]; info: { width?: number; height?: number; format?: string } }> => {
   // load image
-  let image = sharp(inputImage);
+  let image = sharp(inputImage, { animated: true });
   const imageMetadata = await image.metadata();
+
+  const isAnimatedPNG = imageMetadata.format === 'png' && isAnimated(inputImage);
+  if (isAnimatedPNG) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `
+      Sharp does not support animated png for now, this issue caused by libspng from upstream. So directly return the original image.
+      For more information your can check these relevant issues:
+      - APNG support https://github.com/lovell/sharp/issues/2375
+      - Animated PNG (APNG) read support https://github.com/randy408/libspng/issues/4
+      `,
+    );
+    return { data: inputImage, info: imageMetadata };
+  }
 
   // rotate image if necessary
   if (imageMetadata.format !== 'svg') {
@@ -36,7 +51,7 @@ const processImage = async (
   }
 
   // resize image
-  if (imageOptions.resize && imageMetadata.format !== 'gif') {
+  if (imageOptions.resize) {
     image = image.resize(imageOptions.width, imageOptions.height);
 
     // fill missing resize values
@@ -64,7 +79,7 @@ const processImage = async (
   }
 
   // optimize image
-  if (imageMetadata.format && (imageOptions.optimize || (imageMetadata.format === 'gif' && imageOptions.resize))) {
+  if (imageMetadata.format && imageOptions.optimize) {
     return {
       data: await optimizeImage(image, inputImage, imageMetadata.format, imageOptions, loaderOptions),
       info: imageMetadata,

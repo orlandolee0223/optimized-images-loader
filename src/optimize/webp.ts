@@ -17,7 +17,15 @@ const optimizeWebp = async (
   options?: LoaderOptions['webp'],
 ): Promise<Buffer> => {
   // encode the image using sharp
-  return image.webp(options).toBuffer();
+  return image
+    .webp({
+      // 影响图像体积参数
+      lossless: true,
+      effort: 6,
+
+      ...options,
+    })
+    .toBuffer();
 };
 
 export default optimizeWebp;

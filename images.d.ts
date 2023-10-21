@@ -1,10 +1,11 @@
-type ImgSrc = {
-  src: string;
-  width: number;
-  height: number;
-  format: string;
-  toString(): string;
-}
+// type ImgSrc = {
+//   src: string;
+//   width: number;
+//   height: number;
+//   format: string;
+//   toString(): string;
+// }
+type ImgSrc = string
 
 type ColorsSrc = {
   src: string[];

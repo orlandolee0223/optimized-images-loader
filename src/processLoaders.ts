@@ -34,9 +34,10 @@ const enrichResult = (
 
   const output = result.replace(/((module\.exports\s*=)\s*)([^\s].*[^;])(;$|$)/g, 'var src = $3;');
 
-  return `${output}module.exports={src:src,width:${width},height:${height},format:${JSON.stringify(
-    format || '',
-  )},toString:function(){return src;}};`;
+  // return `${output}module.exports={src:src,width:${width},height:${height},format:${JSON.stringify(
+  //   format || '',
+  // )},toString:function(){return src;}};`;
+  return `${output}module.exports=src;`;
 };
 
 /**

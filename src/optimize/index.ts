@@ -20,6 +20,10 @@ const sharpBasedOptimizers = {
     handler: optimizeWebp,
     optionsKey: 'webp',
   },
+  gif: {
+    handler: optimizeGif,
+    optionsKey: 'gifsicle',
+  },
 } as Record<
   string,
   { handler: (image: Sharp, imageOptions: ImageOptions, options?: unknown) => Promise<Buffer>; optionsKey: string }
@@ -29,10 +33,6 @@ const rawBufferBasedOptimizers = {
   svg: {
     handler: optimizeSvg,
     optionsKey: 'svgo',
-  },
-  gif: {
-    handler: optimizeGif,
-    optionsKey: 'gifsicle',
   },
 } as Record<
   string,
@@ -46,6 +46,7 @@ const rawBufferBasedOptimizers = {
  * @param {Sharp} image Sharp wrapped input image
  * @param {Buffer} rawImage Raw input image
  * @param {string} format Format of the input image
+ * @param imageOptions
  * @param {LoaderOptions} loaderOptions Optimized images loader options
  * @returns {Buffer} Optimized image
  */
@@ -56,23 +57,24 @@ const optimizeImage = async (
   imageOptions: ImageOptions,
   loaderOptions: LoaderOptions,
 ): Promise<Buffer> => {
+  const originSize = Buffer.byteLength(rawImage);
+  let optimizedImageBuffer: Buffer = rawImage;
+
   if (sharpBasedOptimizers[format]) {
-    return sharpBasedOptimizers[format].handler(
+    optimizedImageBuffer = await sharpBasedOptimizers[format].handler(
       image,
       imageOptions,
       (loaderOptions as Record<string, unknown>)[sharpBasedOptimizers[format].optionsKey],
     );
-  }
-
-  if (rawBufferBasedOptimizers[format]) {
-    return rawBufferBasedOptimizers[format].handler(
+  } else if (rawBufferBasedOptimizers[format]) {
+    optimizedImageBuffer = await rawBufferBasedOptimizers[format].handler(
       rawImage,
       imageOptions,
       (loaderOptions as Record<string, unknown>)[rawBufferBasedOptimizers[format].optionsKey],
     );
   }
 
-  return image.toBuffer();
+  return Buffer.byteLength(optimizedImageBuffer) < originSize ? optimizedImageBuffer : rawImage;
 };
 
 export default optimizeImage;

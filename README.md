@@ -14,6 +14,7 @@ Features:
 - [Options](#options)
 - [Usage](#usage)
 - [License](#license)
+- [版本发布](#版本发布)
 
 ## Installation
 
@@ -190,6 +191,22 @@ export default () => (
 > Currently not supported
 
 TODO: needs general documentation
+
+## 版本发布
+
+版本号规范遵循 [语义化版本](https://semver.org/lang/zh-CN/) 文档
+
+git commit message 规范遵循 [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)，相关代码编辑器插件有
+
+- webstorm plugin [Git Commit Template](https://plugins.jetbrains.com/plugin/9861-git-commit-template)
+- vscode plugin [Commit Message Editor](https://marketplace.visualstudio.com/items?itemName=adam-bender.commit-message-editor)
+
+新的修改变动合并到master分支后，可以使用以下命令执行版本发布。
+
+```shell
+npm run release
+npm run git:push:tags
+```
 
 ## License
 

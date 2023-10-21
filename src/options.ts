@@ -1,16 +1,16 @@
-import { EncodeOptions as MozjpegOptions } from '@wasm-codecs/mozjpeg/lib/types';
-import { EncodeOptions as OxipngOptions } from '@wasm-codecs/oxipng/lib/types';
-import { EncodeOptions as GifsicleOptions } from '@wasm-codecs/gifsicle/lib/types';
-import { WebpOptions } from 'sharp';
+// import { EncodeOptions as MozjpegOptions } from '@wasm-codecs/mozjpeg/lib/types';
+// import { EncodeOptions as OxipngOptions } from '@wasm-codecs/oxipng/lib/types';
+// import { EncodeOptions as GifsicleOptions } from '@wasm-codecs/gifsicle/lib/types';
+import { WebpOptions, JpegOptions, PngOptions, GifOptions } from 'sharp';
 
 export interface LoaderOptions {
   optimize?: boolean;
   cacheFolder?: string;
   includeStrategy?: 'string' | 'react';
-  mozjpeg?: MozjpegOptions;
-  oxipng?: OxipngOptions;
+  mozjpeg?: JpegOptions;
+  oxipng?: PngOptions;
   webp?: WebpOptions;
-  gifsicle?: GifsicleOptions;
+  gifsicle?: GifOptions;
   svgo?: Record<string, unknown>;
   svgr?: Record<string, unknown>;
 }

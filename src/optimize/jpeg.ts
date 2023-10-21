@@ -1,5 +1,5 @@
 import { Sharp } from 'sharp';
-import encode from '@wasm-codecs/mozjpeg';
+// import encode from '@wasm-codecs/mozjpeg';
 import { LoaderOptions } from '../options';
 import { ImageOptions } from '../parseQuery';
 
@@ -17,14 +17,23 @@ const optimizeJpeg = async (
   imageOptions: ImageOptions,
   options?: LoaderOptions['mozjpeg'],
 ): Promise<Buffer> => {
+  return image
+    .jpeg({
+      // 影响体积的参数
+      mozjpeg: true,
+      // quality: 76,
+
+      ...options,
+    })
+    .toBuffer();
   // convert to raw image data
-  const {
-    data,
-    info: { width, height, channels },
-  } = await image.raw().toBuffer({ resolveWithObject: true });
+  // const {
+  //   data,
+  //   info: { width, height, channels },
+  // } = await image.raw().toBuffer({ resolveWithObject: true });
 
   // encode the image using @wasm-codecs/mozjpeg
-  return encode(data, { width, height, channels }, options);
+  // return encode(data, { width, height, channels }, options);
 };
 
 export default optimizeJpeg;
