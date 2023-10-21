@@ -52,7 +52,7 @@ const getCacheFolder = async (loaderOptions: LoaderOptions): Promise<string> => 
   }
 
   if (!loaderOptions.cacheFolder) {
-    cacheFolder = path.resolve(os.tmpdir(), 'optimized-images-loader');
+    cacheFolder = path.resolve(os.tmpdir(), 'next-optimized-images-loader');
 
     if (await isValidCacheFolder(cacheFolder)) {
       return cacheFolder;
